@@ -144,10 +144,155 @@ Invoke-PipelineStep -Name 'String decryption (static then dynamic fallback)' -Ac
         }
     }
 
+    # Built-in runtime reflection decryptor (requires dotnet + AsmResolver)
+    if (-not $done) {
+        Log "WARNING: Built-in runtime decryptor EXECUTES CODE from target binary."
+        Log "WARNING: Run only in sandboxed environment (VM recommended)."
+        Write-Output "CONSENT_REQUIRED:dynamic-string-decrypt"
+
+        # Check if dotnet SDK available
+        if (Get-Command dotnet -ErrorAction SilentlyContinue) {
+            $decryptorDir = Join-Path $OutputDir 'intermediate' 'runtime-decryptor'
+            if (-not (Test-Path $decryptorDir)) { New-Item -ItemType Directory -Path $decryptorDir -Force | Out-Null }
+
+            # Write C# project
+            $csprojContent = @'
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AsmResolver.DotNet" Version="6.*" />
+  </ItemGroup>
+</Project>
+'@
+            $csprojContent | Out-File -FilePath (Join-Path $decryptorDir 'RuntimeDecrypt.csproj') -Encoding utf8
+
+            # Write C# source — universal ConfuserEx string decryptor via Reflection + AsmResolver
+            $csContent = @'
+// dynamic-string-decrypt.cs — Universal ConfuserEx string decryptor via Reflection
+// WARNING: This EXECUTES code from the target binary. Run in a VM/sandbox.
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using AsmResolver.DotNet;
+using AsmResolver.PE.DotNet.Cil;
+
+var targetPath = args[0];
+var outputPath = args.Length > 1 ? args[1] : Path.ChangeExtension(targetPath, ".decrypted.dll");
+
+// 1. Load via Reflection (executes module ctor — sandbox!)
+var asm = Assembly.LoadFrom(Path.GetFullPath(targetPath));
+
+// 2. Load via AsmResolver for IL rewriting
+var module = ModuleDefinition.FromFile(targetPath);
+
+// 3. Locate decryption method: single int param, returns string, many call sites
+var candidates = module.GetAllTypes()
+    .SelectMany(t => t.Methods)
+    .Where(m => m.Signature?.ReturnType.FullName == "System.String"
+             && m.Signature.GetParameterCount() == 1
+             && m.CilMethodBody != null)
+    .OrderByDescending(m => CountCallSites(module, m))
+    .ToList();
+
+var decryptorDef = candidates.FirstOrDefault()
+    ?? throw new Exception("Cannot locate decryption method heuristically");
+
+Console.WriteLine($"[*] Decryptor: {decryptorDef.FullName}");
+
+// 4. Resolve via Reflection
+var decryptorInfo = asm.GetType(decryptorDef.DeclaringType!.FullName)!
+    .GetMethod(decryptorDef.Name, BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public)!;
+
+// 5. Walk call sites, invoke, collect table
+var table = new Dictionary<int, string>();
+foreach (var type in module.GetAllTypes())
+foreach (var method in type.Methods.Where(m => m.CilMethodBody != null))
+{
+    var instrs = method.CilMethodBody!.Instructions;
+    for (int i = 1; i < instrs.Count; i++)
+    {
+        if (instrs[i].OpCode == CilOpCodes.Call
+            && instrs[i].Operand is IMethodDescriptor md
+            && md.FullName == decryptorDef.FullName
+            && instrs[i - 1].IsLdcI4())
+        {
+            int token = instrs[i - 1].GetLdcI4Constant();
+            if (!table.ContainsKey(token))
+            {
+                try { table[token] = (string)decryptorInfo.Invoke(null, new object[] { token })!; }
+                catch { /* skip failed tokens */ }
+            }
+            // 6. Rewrite IL: replace ldc.i4 + call with ldstr
+            instrs[i - 1].OpCode = CilOpCodes.Nop;
+            instrs[i].OpCode = CilOpCodes.Ldstr;
+            instrs[i].Operand = table[token];
+        }
+    }
+}
+
+// 7. Save
+module.Write(outputPath);
+Console.WriteLine($"[+] Decrypted {table.Count} strings → {outputPath}");
+
+// Dump TSV for strings/decrypted.tsv
+File.WriteAllLines(
+    Path.ChangeExtension(outputPath, ".tsv"),
+    table.Select(kv => $"{kv.Key}\t{kv.Value}"));
+
+static int CountCallSites(ModuleDefinition mod, MethodDefinition target)
+{
+    return mod.GetAllTypes()
+        .SelectMany(t => t.Methods)
+        .Where(m => m.CilMethodBody != null)
+        .SelectMany(m => m.CilMethodBody!.Instructions)
+        .Count(i => i.OpCode == CilOpCodes.Call
+                  && i.Operand is IMethodDescriptor md
+                  && md.FullName == target.FullName);
+}
+'@
+            $csContent | Out-File -FilePath (Join-Path $decryptorDir 'Program.cs') -Encoding utf8
+
+            Log "Building runtime decryptor..."
+            $buildOutput = & dotnet build $decryptorDir --configuration Release 2>&1
+            $buildOutput | ForEach-Object { Log "  $_" }
+
+            if ($LASTEXITCODE -eq 0) {
+                Log "Running runtime decryptor on $currentDll..."
+                $runOutput = & dotnet run --project $decryptorDir --configuration Release -- $currentDll $stringsDecDll 2>&1
+                $runOutput | ForEach-Object { Log "  $_" }
+
+                if ($LASTEXITCODE -eq 0 -and (Test-Path $stringsDecDll)) {
+                    $done = $true
+                    Log "Runtime reflection decryptor succeeded"
+
+                    # Copy TSV if generated
+                    $runtimeTsv = [System.IO.Path]::ChangeExtension($stringsDecDll, '.tsv')
+                    if (Test-Path $runtimeTsv) {
+                        $decryptedTsv = Join-Path $OutputDir 'strings' 'decrypted.tsv'
+                        Copy-Item -Path $runtimeTsv -Destination $decryptedTsv -Force
+                        Log "Decrypted strings table copied to $decryptedTsv"
+                    }
+                } else {
+                    Log "Runtime decryptor failed (exit $LASTEXITCODE)"
+                }
+            } else {
+                Log "Runtime decryptor build failed"
+            }
+        } else {
+            Log "dotnet SDK not available, skipping runtime decryptor"
+        }
+    }
+
     if (-not $done) {
         Log "INSTALL_REQUIRED:ConfuserEx-Static-String-Decryptor or ConfuserEx2_String_Decryptor"
         Write-Output "INSTALL_REQUIRED:ConfuserEx-String-Decryptor"
-        Log "No string decryptor available, copying previous stage"
+        Log "No string decryptor succeeded (static, dynamic, runtime), copying previous stage"
         Copy-Item -Path $currentDll -Destination $stringsDecDll -Force
     }
 
