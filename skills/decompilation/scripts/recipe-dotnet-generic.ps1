@@ -68,7 +68,7 @@ $allStringsFile = Join-Path $stringsDir 'all_strings.txt'
 Log "Extracting strings..."
 try {
     if (Test-ToolAvailable 'strings') {
-        & strings -n 6 $Target | Out-File -FilePath $allStringsFile -Encoding utf8
+        & strings -accepteula -n 6 $Target | Out-File -FilePath $allStringsFile -Encoding utf8
     } else {
         # PowerShell fallback
         $content = [System.IO.File]::ReadAllBytes($Target)

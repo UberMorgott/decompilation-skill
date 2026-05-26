@@ -169,7 +169,7 @@ Log "Extracting strings..."
 
 try {
     if (Test-ToolAvailable 'strings') {
-        & strings -n 6 $targetFile | Out-File -FilePath $allStringsFile -Encoding utf8
+        & strings -accepteula -n 6 $targetFile | Out-File -FilePath $allStringsFile -Encoding utf8
     } else {
         # PowerShell fallback: extract ASCII and Unicode printable strings (min length 6)
         $content = [System.IO.File]::ReadAllBytes($targetFile)

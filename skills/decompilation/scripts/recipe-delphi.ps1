@@ -56,7 +56,7 @@ Invoke-PipelineStep -Name 'Strings extraction' -Action {
     $allStringsFile = Join-Path $OutputDir 'strings' 'all_strings.txt'
 
     if (Test-ToolAvailable 'strings') {
-        & strings -n 6 $Target | Out-File -FilePath $allStringsFile -Encoding utf8
+        & strings -accepteula -n 6 $Target | Out-File -FilePath $allStringsFile -Encoding utf8
     } else {
         $content = [System.IO.File]::ReadAllBytes($Target)
         $ascii = [System.Text.Encoding]::ASCII.GetString($content) -split '[^\x20-\x7E]+' |

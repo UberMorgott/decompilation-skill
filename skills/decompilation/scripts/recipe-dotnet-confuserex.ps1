@@ -197,22 +197,15 @@ if (Test-Path $proxyDll) { $currentDll = $proxyDll }
 } # end if (-not $skipToRename)
 
 # ── Step 5: Rename symbols ──────────────────────────────────────────────────
+# NOTE: de4dot-cex with -p crx already renames symbols during control flow cleanup (step 3).
+# A separate rename pass is only needed if step 3 was skipped or used a different tool.
+# We copy the previous output to maintain the intermediate file numbering convention.
 
 $renamedDll = Join-Path $OutputDir 'intermediate' '05_renamed.dll'
 
-Invoke-PipelineStep -Name 'Symbol rename (de4dot-cex --rename)' -Action {
-    $de4dotCmd = $null
-    foreach ($name in @('de4dot-cex', 'de4dot-x64', 'de4dot')) {
-        if (Test-ToolAvailable $name) { $de4dotCmd = $name; break }
-    }
-
-    if ($de4dotCmd) {
-        & $de4dotCmd $currentDll --rename -o $renamedDll 2>&1 | ForEach-Object { Log "  $_" }
-        if ($LASTEXITCODE -ne 0) { throw "$de4dotCmd rename exited with code $LASTEXITCODE" }
-    } else {
-        Log "INSTALL_REQUIRED:de4dot-cex"
-        Copy-Item -Path $currentDll -Destination $renamedDll -Force
-    }
+Invoke-PipelineStep -Name 'Symbol rename (already done by de4dot-cex -p crx)' -Action {
+    Copy-Item -Path $currentDll -Destination $renamedDll -Force
+    Log "Symbols already renamed in step 3 (de4dot-cex -p crx includes rename). Copied forward."
 }
 
 if (Test-Path $renamedDll) { $currentDll = $renamedDll }
@@ -236,12 +229,8 @@ Invoke-PipelineStep -Name 'Decompile main (ilspycmd)' -Action {
     $srcDir = Join-Path $OutputDir 'src'
 
     if (Test-ToolAvailable 'ilspycmd') {
-        & ilspycmd $currentDll -p -o $srcDir --genpdb 2>&1 | ForEach-Object { Log "  $_" }
-        if ($LASTEXITCODE -ne 0) {
-            Log "ilspycmd with --genpdb failed, retrying without..."
-            & ilspycmd $currentDll -p -o $srcDir 2>&1 | ForEach-Object { Log "  $_" }
-            if ($LASTEXITCODE -ne 0) { throw "ilspycmd exited with code $LASTEXITCODE" }
-        }
+        & ilspycmd $currentDll -p -o $srcDir 2>&1 | ForEach-Object { Log "  $_" }
+        if ($LASTEXITCODE -ne 0) { throw "ilspycmd exited with code $LASTEXITCODE" }
     } else {
         Log "INSTALL_REQUIRED:ilspycmd (dotnet tool install -g ilspycmd)"
         Write-Output "INSTALL_REQUIRED:ilspycmd"

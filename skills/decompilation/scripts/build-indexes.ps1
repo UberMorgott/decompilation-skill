@@ -135,7 +135,7 @@ foreach ($file in $csFiles) {
             }
 
             $currentType = $Matches[1]
-            $inheritance = if ($Matches[2]) { $Matches[2].Trim() } else { '' }
+            $inheritance = if ($Matches[2]) { [string]$Matches[2] -replace '^\s+|\s+$' } else { '' }
 
             # Parse base class and interfaces
             if ($inheritance) {
@@ -162,9 +162,9 @@ foreach ($file in $csFiles) {
 
         # Methods
         if ($line -match $methodRegex) {
-            $returnType = $Matches[1].Trim()
+            $returnType = "$($Matches[1])".Trim()
             $methodName = $Matches[2]
-            $params = $Matches[3].Trim()
+            $params = "$($Matches[3])".Trim()
             $currentMethodName = $methodName
 
             # Skip property getters/setters and constructors that look like methods
@@ -236,7 +236,7 @@ foreach ($file in $csFiles) {
 
         # Fields
         if ($line -match $fieldRegex -and $currentType) {
-            $fieldType = $Matches[1].Trim()
+            $fieldType = "$($Matches[1])".Trim()
             $fieldName = $Matches[2]
 
             # Skip common noise
