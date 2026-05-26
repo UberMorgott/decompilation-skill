@@ -4,5 +4,6 @@ tools/
 *.bak
 unity.zip
 .serena/
+__pycache__/
 *.exe
 *.dll

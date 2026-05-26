@@ -62,36 +62,7 @@ foreach ($t in $missingTools) { Write-Output "INSTALL_REQUIRED:$t" }
 # ── Step 1: Strings extraction ───────────────────────────────────────────────
 
 Invoke-PipelineStep -Name 'Strings extraction' -Action {
-    $allStringsFile = Join-Path $OutputDir 'strings' 'all_strings.txt'
-
-    if (Test-ToolAvailable 'strings') {
-        & strings -accepteula -n 6 $Target | Out-File -FilePath $allStringsFile -Encoding utf8
-    } else {
-        $content = [System.IO.File]::ReadAllBytes($Target)
-        $ascii = [System.Text.Encoding]::ASCII.GetString($content) -split '[^\x20-\x7E]+' |
-            Where-Object { $_.Length -ge 6 }
-        $unicode = [System.Text.Encoding]::Unicode.GetString($content) -split '[^\x20-\x7E]+' |
-            Where-Object { $_.Length -ge 6 }
-        ($ascii + $unicode) | Sort-Object -Unique | Out-File -FilePath $allStringsFile -Encoding utf8
-    }
-
-    # URL candidates
-    Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Where-Object { $_ -match '^https?:|^/' } |
-        Out-File -FilePath (Join-Path $OutputDir 'strings' 'url_candidates.txt') -Encoding utf8
-
-    # Error messages
-    Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Where-Object { $_ -match '(?i)(error|exception|fail|invalid|cannot|unable|denied|timeout)' } |
-        Out-File -FilePath (Join-Path $OutputDir 'strings' 'error_messages.txt') -Encoding utf8
-
-    # Format strings ({0}, {1}, %s, %d, etc.)
-    $formatResults = @(Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Select-String -Pattern '\{[0-9]+\}|%[sdfu]' |
-        ForEach-Object { $_.Line })
-    $formatResults | Out-File -FilePath (Join-Path $OutputDir 'strings' 'format_strings.txt') -Encoding utf8
-
-    Log "Strings extracted"
+    Extract-Strings -Target $Target -StringsDir (Join-Path $OutputDir 'strings')
 }
 
 # ── Step 2: IDR auto-mode → .idc export ─────────────────────────────────────

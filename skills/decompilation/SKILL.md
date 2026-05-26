@@ -42,7 +42,10 @@ After recon determines the binary type, check which tools are needed for that pi
 
 ```powershell
 & ./scripts/install-tools.ps1 -Check
+# Output format: TOOL_MISSING: / TOOL_OK: / TOOL_OUTDATED: per tool
 ```
+
+`recon.ps1` also checks diec availability at recon time and falls back to PE heuristics if absent.
 
 **If tools are missing:**
 
@@ -72,50 +75,6 @@ Optional tools can be skipped — pipeline will work partially.
 ---
 
 ## Routing Tree
-
-### Decision Flowchart
-
-```dot
-digraph routing {
-  rankdir=TB;
-  node [shape=box, style=rounded];
-
-  recon [label="Phase 0: recon.ps1"];
-  kind [label="recon.kind?", shape=diamond];
-  managed [label="Managed (.NET)"];
-  obf [label="obfuscator != none?", shape=diamond];
-  deobf [label="Run deobfuscation\npipeline"];
-  embedded [label="embedded_assemblies\n_suspected?", shape=diamond];
-  extract [label="extract-embedded.ps1\n+ recurse children"];
-  ilspy [label="ilspycmd --project"];
-  il2cpp [label="IL2CPP pipeline"];
-  mono [label="Unity Mono\n(treat as managed)"];
-  native_q [label="Delphi?", shape=diamond];
-  delphi [label="IDR + Ghidra + dhrake"];
-  general [label="Ghidra headless"];
-  indexes [label="build-indexes.ps1\n+ write README"];
-
-  recon -> kind;
-  kind -> managed [label="managed"];
-  kind -> mono [label="unity_mono"];
-  kind -> il2cpp [label="unity_il2cpp"];
-  kind -> native_q [label="native"];
-  managed -> obf;
-  mono -> obf;
-  obf -> deobf [label="yes"];
-  obf -> embedded [label="no"];
-  deobf -> embedded;
-  embedded -> extract [label="yes"];
-  embedded -> ilspy [label="no"];
-  extract -> ilspy;
-  il2cpp -> indexes;
-  native_q -> delphi [label="yes"];
-  native_q -> general [label="no"];
-  delphi -> indexes;
-  general -> indexes;
-  ilspy -> indexes;
-}
-```
 
 ### Pseudocode
 
@@ -194,13 +153,12 @@ Every run produces a structured folder. See `references/output-schema.md` for th
 
 ## MUST Rules
 
-1. Run recon first — never assume type from filename
-2. Preserve `original/` — always copy before modification
-3. Save every intermediate — diagnosable pipeline
-4. Use `--project` mode — file-per-type output
-5. Build `metadata/index.json` + `api_surface.json`
-6. Write `README.md` with pipeline state
-7. Log failed steps with exit code + stderr to `pipeline.log`
+1. Preserve `original/` — enables rollback and diff against deobfuscated versions
+2. Save every intermediate — enables debugging failed pipeline steps without re-running
+3. Use `--project` mode for ilspycmd — produces one .cs per type, critical for agent navigation
+4. Build `metadata/index.json` + `api_surface.json`
+5. Write `README.md` with pipeline state
+6. Log failed steps with exit code + stderr to `pipeline.log`
 
 ## MUST NOT Rules
 
@@ -226,18 +184,5 @@ Every run produces a structured folder. See `references/output-schema.md` for th
 - Never proceed without user confirmation
 
 **DRM refusal:** Do not assist with bypassing DRM or licensing protections on software the user does not own. If the target appears to be a DRM-protected commercial product and user lacks ownership, refuse and explain why.
-
----
-
-## Tool Dependency Check
-
-`scripts/recon.ps1` checks diec availability. For full tool status, run `scripts/install-tools.ps1 -Check` which reports `TOOL_MISSING:`, `TOOL_OK:`, `TOOL_OUTDATED:` per tool.
-
-| Category | Tools |
-|---|---|
-| Recommended (fallback heuristics available) | `diec` (DiE CLI) — recon falls back to PE magic bytes + .NET metadata token if absent |
-| Required | `ilspycmd`, `strings` |
-| Recommended | `de4dot-cex`, `Ghidra` + `analyzeHeadless`, `Il2CppDumper`, `Cpp2IL` |
-| Optional | `IDR`, `mitmproxy`, `frida`, `dnSpyEx` |
 
 Read `references/tool-catalog.md` for install commands, URLs, and flags.

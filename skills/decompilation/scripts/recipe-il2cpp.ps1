@@ -172,33 +172,7 @@ Invoke-PipelineStep -Name 'Decompile DLLs (ilspycmd)' -Action {
 # ── Step 4: Strings extraction ───────────────────────────────────────────────
 
 Invoke-PipelineStep -Name 'Strings extraction' -Action {
-    $allStringsFile = Join-Path $OutputDir 'strings' 'all_strings.txt'
-
-    if (Test-ToolAvailable 'strings') {
-        & strings -accepteula -n 6 $gameAssemblyPath | Out-File -FilePath $allStringsFile -Encoding utf8
-    } else {
-        $content = [System.IO.File]::ReadAllBytes($gameAssemblyPath)
-        [System.Text.Encoding]::ASCII.GetString($content) -split '[^\x20-\x7E]+' |
-            Where-Object { $_.Length -ge 6 } |
-            Out-File -FilePath $allStringsFile -Encoding utf8
-    }
-
-    Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Where-Object { $_ -match '^https?:|^/' } |
-        Out-File -FilePath (Join-Path $OutputDir 'strings' 'url_candidates.txt') -Encoding utf8
-
-    # Error messages
-    Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Where-Object { $_ -match '(?i)(error|exception|fail|invalid|cannot|unable|denied|timeout)' } |
-        Out-File -FilePath (Join-Path $OutputDir 'strings' 'error_messages.txt') -Encoding utf8
-
-    # Format strings ({0}, {1}, %s, %d, etc.)
-    $formatResults = @(Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Select-String -Pattern '\{[0-9]+\}|%[sdfu]' |
-        ForEach-Object { $_.Line })
-    $formatResults | Out-File -FilePath (Join-Path $OutputDir 'strings' 'format_strings.txt') -Encoding utf8
-
-    Log "Strings extracted"
+    Extract-Strings -Target $gameAssemblyPath -StringsDir (Join-Path $OutputDir 'strings')
 }
 
 # ── Step 5: Optional Ghidra with IL2CPP symbols ─────────────────────────────

@@ -69,41 +69,7 @@ if (Test-ToolAvailable 'ilspycmd') {
 
 $stringsDir = Join-Path $OutputDir 'strings'
 $allStringsFile = Join-Path $stringsDir 'all_strings.txt'
-
-Log "Extracting strings..."
-try {
-    if (Test-ToolAvailable 'strings') {
-        & strings -accepteula -n 6 $Target | Out-File -FilePath $allStringsFile -Encoding utf8
-    } else {
-        # PowerShell fallback
-        $content = [System.IO.File]::ReadAllBytes($Target)
-        $asciiStrings = [System.Text.Encoding]::ASCII.GetString($content) -split '[^\x20-\x7E]+' |
-            Where-Object { $_.Length -ge 6 }
-        $unicodeStrings = [System.Text.Encoding]::Unicode.GetString($content) -split '[^\x20-\x7E]+' |
-            Where-Object { $_.Length -ge 6 }
-        ($asciiStrings + $unicodeStrings) | Sort-Object -Unique | Out-File -FilePath $allStringsFile -Encoding utf8
-    }
-    Log "Strings extracted to $allStringsFile"
-
-    # URL candidates
-    Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Where-Object { $_ -match '^https?:|^/' } |
-        Out-File -FilePath (Join-Path $stringsDir 'url_candidates.txt') -Encoding utf8
-
-    # Error messages
-    Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Where-Object { $_ -match '(?i)(error|exception|fail|invalid|cannot|unable|denied|timeout)' } |
-        Out-File -FilePath (Join-Path $stringsDir 'error_messages.txt') -Encoding utf8
-
-    # Format strings ({0}, {1}, %s, %d, etc.)
-    $formatResults = @(Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Select-String -Pattern '\{[0-9]+\}|%[sdfu]' |
-        ForEach-Object { $_.Line })
-    $formatResults | Out-File -FilePath (Join-Path $stringsDir 'format_strings.txt') -Encoding utf8
-
-} catch {
-    Log "WARNING: Strings extraction failed: $_"
-}
+Extract-Strings -Target $Target -StringsDir $stringsDir
 
 # ── Build indexes ────────────────────────────────────────────────────────────
 

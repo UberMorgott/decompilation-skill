@@ -11,7 +11,7 @@
 
 | Tool | URL | Install | Priority |
 |---|---|---|---|
-| **Detect It Easy (DiE)** — CLI: `diec` | https://github.com/horsicq/Detect-It-Easy | Download release, add to PATH | **Required** |
+| **Detect It Easy (DiE)** — CLI: `diec` | https://github.com/horsicq/Detect-It-Easy | Download release, add to PATH | Recommended (fallback heuristics available; exit code 2) |
 | **strings** | Built-in (Linux) or Sysinternals (Windows) | `sudo apt install binutils` or Sysinternals download | **Required** |
 | **PEStudio** | https://www.winitor.com | Download portable | Optional |
 | **pe-bear** | https://github.com/hasherezade/pe-bear | Download release | Optional |
@@ -172,8 +172,9 @@ Curated catalog index: https://github.com/NotPrab/.NET-Deobfuscator
 
 For the skill to function at a basic level, these must be installed:
 
-1. `diec` (Detect It Easy CLI) — recon phase
-2. `ilspycmd` — .NET decompilation
-3. `strings` — raw string extraction
+1. `ilspycmd` — .NET decompilation
+2. `strings` — raw string extraction
 
-Everything else enhances capability but the skill can produce useful output with just these three.
+`diec` is recommended but not required — recon falls back to PE magic bytes + .NET metadata token heuristics if absent (exit code 2).
+
+Everything else enhances capability but the skill can produce useful output with just these two.

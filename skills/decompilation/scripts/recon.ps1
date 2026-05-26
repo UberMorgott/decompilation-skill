@@ -160,53 +160,8 @@ if (-not $dieAvailable) {
 # ── Strings extraction ──────────────────────────────────────────────────────
 
 $stringsDir = Join-Path $OutputDir 'strings'
-if (-not (Test-Path $stringsDir)) {
-    New-Item -ItemType Directory -Path $stringsDir -Force | Out-Null
-}
-
 $allStringsFile = Join-Path $stringsDir 'all_strings.txt'
-Log "Extracting strings..."
-
-try {
-    if (Test-ToolAvailable 'strings') {
-        & strings -accepteula -n 6 $targetFile | Out-File -FilePath $allStringsFile -Encoding utf8
-    } else {
-        # PowerShell fallback: extract ASCII and Unicode printable strings (min length 6)
-        $content = [System.IO.File]::ReadAllBytes($targetFile)
-
-        # ASCII strings
-        $asciiStrings = [System.Text.Encoding]::ASCII.GetString($content) -split '[^\x20-\x7E]+' |
-            Where-Object { $_.Length -ge 6 }
-
-        # Unicode strings
-        $unicodeStrings = [System.Text.Encoding]::Unicode.GetString($content) -split '[^\x20-\x7E]+' |
-            Where-Object { $_.Length -ge 6 }
-
-        ($asciiStrings + $unicodeStrings) | Sort-Object -Unique | Out-File -FilePath $allStringsFile -Encoding utf8
-    }
-    Log "Strings extracted to $allStringsFile"
-
-    # Filter URL candidates
-    $urlFile = Join-Path $stringsDir 'url_candidates.txt'
-    Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Where-Object { $_ -match '^https?:|^/' } |
-        Out-File -FilePath $urlFile -Encoding utf8
-
-    # Filter error messages
-    $errFile = Join-Path $stringsDir 'error_messages.txt'
-    Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Where-Object { $_ -match '(?i)(error|exception|fail|invalid|cannot|unable|denied|timeout|unauthorized)' } |
-        Out-File -FilePath $errFile -Encoding utf8
-
-    # Filter format strings ({0}, {1}, %s, %d, etc.)
-    $formatResults = @(Get-Content $allStringsFile -ErrorAction SilentlyContinue |
-        Select-String -Pattern '\{[0-9]+\}|%[sdfu]' |
-        ForEach-Object { $_.Line })
-    $formatResults | Out-File -FilePath (Join-Path $stringsDir 'format_strings.txt') -Encoding utf8
-
-} catch {
-    Log "WARNING: Strings extraction failed: $_"
-}
+Extract-Strings -Target $targetFile -StringsDir $stringsDir
 
 # ── Parse DiE output for compiler/obfuscator ────────────────────────────────
 

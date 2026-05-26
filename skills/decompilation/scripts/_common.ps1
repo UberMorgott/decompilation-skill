@@ -107,3 +107,66 @@ function Ensure-Tool {
     Log "WARN: Tool '$Name' not found. Run:  $installScript -Tool $Name"
     return $null
 }
+
+function Extract-Strings {
+    <#
+    .SYNOPSIS
+        Extract strings from a binary and produce filtered subsets.
+    .DESCRIPTION
+        Runs Sysinternals strings (or a PowerShell fallback) on the target binary,
+        then filters the result into url_candidates.txt, error_messages.txt, and
+        format_strings.txt inside the given StringsDir.
+    .PARAMETER Target
+        Path to the binary file to extract strings from.
+    .PARAMETER StringsDir
+        Directory where all_strings.txt and filtered files will be written.
+    #>
+    param(
+        [Parameter(Mandatory)][string]$Target,
+        [Parameter(Mandatory)][string]$StringsDir
+    )
+
+    if (-not (Test-Path $StringsDir)) {
+        New-Item -ItemType Directory -Path $StringsDir -Force | Out-Null
+    }
+
+    $allStringsFile = Join-Path $StringsDir 'all_strings.txt'
+
+    Log "Extracting strings..."
+    try {
+        if (Test-ToolAvailable 'strings') {
+            & strings -accepteula -n 6 $Target | Out-File -FilePath $allStringsFile -Encoding utf8
+        } else {
+            # PowerShell fallback: extract ASCII and Unicode printable strings (min length 6)
+            $content = [System.IO.File]::ReadAllBytes($Target)
+
+            $asciiStrings = [System.Text.Encoding]::ASCII.GetString($content) -split '[^\x20-\x7E]+' |
+                Where-Object { $_.Length -ge 6 }
+
+            $unicodeStrings = [System.Text.Encoding]::Unicode.GetString($content) -split '[^\x20-\x7E]+' |
+                Where-Object { $_.Length -ge 6 }
+
+            ($asciiStrings + $unicodeStrings) | Sort-Object -Unique | Out-File -FilePath $allStringsFile -Encoding utf8
+        }
+        Log "Strings extracted to $allStringsFile"
+
+        # Filter URL candidates
+        Get-Content $allStringsFile -ErrorAction SilentlyContinue |
+            Where-Object { $_ -match '^https?:|^/' } |
+            Out-File -FilePath (Join-Path $StringsDir 'url_candidates.txt') -Encoding utf8
+
+        # Filter error messages
+        Get-Content $allStringsFile -ErrorAction SilentlyContinue |
+            Where-Object { $_ -match '(?i)(error|exception|fail|invalid|cannot|unable|denied|timeout|unauthorized)' } |
+            Out-File -FilePath (Join-Path $StringsDir 'error_messages.txt') -Encoding utf8
+
+        # Filter format strings ({0}, {1}, %s, %d, etc.)
+        $formatResults = @(Get-Content $allStringsFile -ErrorAction SilentlyContinue |
+            Select-String -Pattern '\{[0-9]+\}|%[sdfu]' |
+            ForEach-Object { $_.Line })
+        $formatResults | Out-File -FilePath (Join-Path $StringsDir 'format_strings.txt') -Encoding utf8
+
+    } catch {
+        Log "WARNING: Strings extraction failed: $_"
+    }
+}
