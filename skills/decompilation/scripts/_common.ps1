@@ -95,7 +95,7 @@ function Ensure-Tool {
         if ($found) {
             # Add its directory to PATH for this session
             $dir = Split-Path $found.FullName -Parent
-            if ($env:PATH -notlike "*$dir*") {
+            if ($dir -notin ($env:PATH -split ';')) {
                 $env:PATH = "$dir;$env:PATH"
             }
             return $found.FullName

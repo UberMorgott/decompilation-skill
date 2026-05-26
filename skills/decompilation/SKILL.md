@@ -16,10 +16,10 @@ Run recon before any decompilation. Never assume binary type from filename.
 
 ```powershell
 # From skill root:
-& ./scripts/recon.ps1 "<target-path>"
+& ./scripts/recon.ps1 -Target "<target-path>" -OutputDir "<output-dir>"
 ```
 
-**Read output:** `recon.json` placed next to target.
+**Read output:** `recon.json` placed in the output directory.
 
 | Field | Values |
 |---|---|
@@ -185,7 +185,7 @@ Every run produces a structured folder. See `references/output-schema.md` for th
 | `intermediate/` | Numbered stages: `01_unpacked`, `02_strings`, ... |
 | `extracted/` | Embedded sub-assemblies (recursive) |
 | `src/` | Decompiled source (file-per-type) |
-| `strings/` | `decrypted.tsv`, `url_candidates.txt`, `all_strings.txt` |
+| `strings/` | `decrypted.tsv`, `url_candidates.txt`, `all_strings.txt`, `format_strings.txt`, `error_messages.txt` |
 | `metadata/index.json` | Type-to-file map, methods, interfaces |
 | `metadata/api_surface.json` | HTTP endpoints, routes, params, returns |
 | `README.md` | Pipeline summary |
@@ -231,13 +231,12 @@ Every run produces a structured folder. See `references/output-schema.md` for th
 
 ## Tool Dependency Check
 
-`scripts/recon.ps1` checks all tools on startup and reports:
-- `INSTALL_REQUIRED:<tool>` — blocking, pipeline cannot proceed
-- `INSTALL_OPTIONAL:<tool>` — non-blocking, some features degraded
+`scripts/recon.ps1` checks diec availability. For full tool status, run `scripts/install-tools.ps1 -Check` which reports `TOOL_MISSING:`, `TOOL_OK:`, `TOOL_OUTDATED:` per tool.
 
 | Category | Tools |
 |---|---|
-| Required | `diec` (DiE CLI), `ilspycmd`, `strings` |
+| Recommended (fallback heuristics available) | `diec` (DiE CLI) — recon falls back to PE magic bytes + .NET metadata token if absent |
+| Required | `ilspycmd`, `strings` |
 | Recommended | `de4dot-cex`, `Ghidra` + `analyzeHeadless`, `Il2CppDumper`, `Cpp2IL` |
 | Optional | `IDR`, `mitmproxy`, `frida`, `dnSpyEx` |
 

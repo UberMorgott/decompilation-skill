@@ -24,6 +24,11 @@ $script:LogTag = 'unity-mono'
 
 . (Join-Path $PSScriptRoot '_common.ps1')
 
+if (-not (Test-Path $Target)) {
+    Log "ERROR: Target not found: $Target"
+    exit 1
+}
+
 # ── Setup ────────────────────────────────────────────────────────────────────
 
 if (-not (Test-Path $OutputDir)) {

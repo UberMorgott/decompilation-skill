@@ -434,7 +434,7 @@ This is the **deliverable layout** the skill must produce. Treat the structure b
 }
 ```
 
-Implementation tip: use **Roslyn** to build both files. Open the generated `.csproj` as a workspace, walk the syntax trees, project to JSON.
+Implementation tip: use **regex-based parsing** of decompiled `.cs` files to build both files. Walk the source directory, extract type/method/attribute declarations via regex, project to JSON.
 
 ---
 
@@ -504,7 +504,7 @@ Listed for the skill builder to easily generate an install manifest.
 - **ConfuserEx-Static-String-Decryptor** — listed in NotPrab catalog
 - **ConfuserEx-Resources-Decryptor** — listed in NotPrab catalog
 - **ProxyCall-Remover** — https://github.com/Kaidoz/ProxyCall-Remover
-- **NoFuserEx** — https://github.com/XenocodeRCE/NoFuserEx
+- **NoFuserEx** — https://github.com/undebel/NoFuserEx (original XenocodeRCE repo deleted)
 - **OldRod** (KoiVM devirtualizer) — https://github.com/Washi1337/OldRod
 - **Catalog index** — https://github.com/NotPrab/.NET-Deobfuscator
 
@@ -572,6 +572,8 @@ Listed for the skill builder to easily generate an install manifest.
 ## 11. Concrete pipeline recipes
 
 The skill should contain these as named runnable scripts under `scripts/`.
+
+> **Note:** The bash examples below are pseudocode illustrating the pipeline logic. The actual implementation uses PowerShell `recipe-*.ps1` scripts.
 
 ### 11.1 `recipe_dotnet_confuserex.sh`
 

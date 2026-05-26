@@ -15,8 +15,8 @@ else:
             m = re.match(r'MakeName\s*\(\s*0x([0-9A-Fa-f]+)\s*,\s*"([^"]+)"\s*\)', line)
             if m:
                 addr_str, name = m.group(1), m.group(2)
-                addr = toAddr(long(addr_str, 16))
+                addr = toAddr(int(addr_str, 16))
                 if addr is not None:
-                    createLabel(addr, name, True)
+                    createLabel(addr, name, True, SourceType.IMPORTED)
                     count += 1
     print("Applied {} IDR symbols from {}".format(count, idc_path))

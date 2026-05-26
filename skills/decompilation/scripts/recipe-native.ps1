@@ -26,6 +26,11 @@ $script:LogTag = 'native'
 
 . (Join-Path $PSScriptRoot '_common.ps1')
 
+if (-not (Test-Path $Target)) {
+    Log "ERROR: Target not found: $Target"
+    exit 1
+}
+
 $ghidraScripts = Join-Path $PSScriptRoot 'ghidra'
 
 # ── Create folder structure ──────────────────────────────────────────────────
@@ -181,8 +186,6 @@ $pipelineJson | ConvertTo-Json -Depth 5 | Out-File -FilePath (Join-Path $OutputD
 $failedCount = ($script:StepResults | Where-Object { $_.status -eq 'failed' }).Count
 Log "Native pipeline complete. $($script:StepNumber) steps, $failedCount failed."
 
-} # end finally
-
 if ($failedCount -gt 0) {
     Write-Output "PIPELINE_STATUS:partial"
     exit 2
@@ -190,3 +193,5 @@ if ($failedCount -gt 0) {
     Write-Output "PIPELINE_STATUS:success"
     exit 0
 }
+
+} # end finally

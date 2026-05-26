@@ -42,7 +42,8 @@ $embeddingType = 'unknown'
 # ── Read binary for resource detection ───────────────────────────────────────
 
 $bytes = [System.IO.File]::ReadAllBytes($Target)
-$rawText = [System.Text.Encoding]::UTF8.GetString($bytes)
+$scanLen = [Math]::Min($bytes.Length, 10MB)
+$rawText = [System.Text.Encoding]::UTF8.GetString($bytes, 0, $scanLen)
 
 # ── Detect embedding type ────────────────────────────────────────────────────
 

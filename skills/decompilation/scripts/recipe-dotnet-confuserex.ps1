@@ -27,6 +27,11 @@ $script:LogTag = 'confuserex'
 
 . (Join-Path $PSScriptRoot '_common.ps1')
 
+if (-not (Test-Path $Target)) {
+    Log "ERROR: Target not found: $Target"
+    exit 1
+}
+
 # ── Create output folder structure ───────────────────────────────────────────
 
 $dirs = @('original', 'intermediate', 'src', 'extracted', 'strings', 'metadata')
@@ -46,6 +51,8 @@ Log "Original preserved at $originalCopy"
 
 $currentDll = $Target
 $skipToRename = $false
+
+try {
 
 # ── Fast-path: try NoFuserEx all-in-one first ───────────────────────────────
 
@@ -281,12 +288,14 @@ Invoke-PipelineStep -Name 'Build indexes' -Action {
     }
 }
 
+} finally {
+
 # ── Write pipeline summary ──────────────────────────────────────────────────
 
 $pipelineJson = [ordered]@{
     target     = $Target
     recipe     = 'dotnet-confuserex'
-    started    = $script:StepResults[0].name
+    started    = [DateTime]::Now.ToString('o')
     steps      = $script:StepResults
     total_steps = $script:StepNumber
     successful = ($script:StepResults | Where-Object { $_.status -eq 'success' }).Count
@@ -307,3 +316,5 @@ if ($failedCount -gt 0) {
     Write-Output "PIPELINE_STATUS:success"
     exit 0
 }
+
+} # end finally

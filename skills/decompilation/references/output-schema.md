@@ -96,7 +96,7 @@ Fields:
 ## index.json Schema
 
 Maps every type to its source file, methods, base class, and interfaces.
-Built by `scripts/build-indexes.ps1` using Roslyn analysis of the generated `.csproj`.
+Built by `scripts/build-indexes.ps1` using regex-based parsing of decompiled `.cs` files.
 
 ```json
 {

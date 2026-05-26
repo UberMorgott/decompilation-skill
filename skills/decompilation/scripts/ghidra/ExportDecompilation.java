@@ -15,45 +15,53 @@ public class ExportDecompilation extends GhidraScript {
             return;
         }
         String outputDir = args[0];
-        new File(outputDir).mkdirs();
+        File outDir = new File(outputDir);
+        outDir.mkdirs();
+        if (!outDir.isDirectory()) {
+            println("ERROR: Cannot create output directory: " + outputDir);
+            return;
+        }
 
         DecompInterface decomp = new DecompInterface();
         decomp.openProgram(currentProgram);
 
-        FunctionIterator funcs = currentProgram.getFunctionManager().getFunctions(true);
-        int count = 0;
-        int errors = 0;
+        try {
+            FunctionIterator funcs = currentProgram.getFunctionManager().getFunctions(true);
+            int count = 0;
+            int errors = 0;
 
-        while (funcs.hasNext() && !monitor.isCancelled()) {
-            Function func = funcs.next();
-            String name = func.getName();
-            String addr = func.getEntryPoint().toString();
+            while (funcs.hasNext() && !monitor.isCancelled()) {
+                Function func = funcs.next();
+                String name = func.getName();
+                String addr = func.getEntryPoint().toString();
 
-            // Sanitize filename
-            String safeName = name.replaceAll("[^a-zA-Z0-9_.]", "_");
-            String fileName = safeName + "_" + addr + ".c";
+                // Sanitize filename
+                String safeName = name.replaceAll("[^a-zA-Z0-9_.]", "_");
+                String fileName = safeName + "_" + addr + ".c";
 
-            try {
-                DecompileResults results = decomp.decompileFunction(func, 30, monitor);
-                if (results.getDecompiledFunction() != null) {
-                    String code = results.getDecompiledFunction().getC();
-                    File outFile = new File(outputDir, fileName);
-                    try (PrintWriter pw = new PrintWriter(outFile)) {
-                        pw.println("// Function: " + name);
-                        pw.println("// Address: " + addr);
-                        pw.println();
-                        pw.println(code);
+                try {
+                    DecompileResults results = decomp.decompileFunction(func, 30, monitor);
+                    if (results.getDecompiledFunction() != null) {
+                        String code = results.getDecompiledFunction().getC();
+                        File outFile = new File(outputDir, fileName);
+                        try (PrintWriter pw = new PrintWriter(outFile)) {
+                            pw.println("// Function: " + name);
+                            pw.println("// Address: " + addr);
+                            pw.println();
+                            pw.println(code);
+                        }
+                        count++;
+                    } else {
+                        errors++;
                     }
-                    count++;
-                } else {
+                } catch (Exception e) {
                     errors++;
                 }
-            } catch (Exception e) {
-                errors++;
             }
-        }
 
-        decomp.dispose();
-        println("Exported " + count + " functions (" + errors + " errors) to " + outputDir);
+            println("Exported " + count + " functions (" + errors + " errors) to " + outputDir);
+        } finally {
+            decomp.dispose();
+        }
     }
 }

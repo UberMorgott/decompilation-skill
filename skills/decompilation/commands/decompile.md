@@ -17,7 +17,7 @@ Accepts a path to a binary file (.dll, .exe) or game folder and produces a struc
 
 3. **Run Phase 0 Recon:**
    ```powershell
-   & "<skill-root>/scripts/recon.ps1" "<target-path>"
+   & "<skill-root>/scripts/recon.ps1" -Target "<target-path>" -OutputDir "<output-dir>"
    ```
    Read the resulting `recon.json`. If exit code 1, report missing tools and stop. If exit code 2, proceed with fallback data.
 
@@ -29,7 +29,7 @@ Accepts a path to a binary file (.dll, .exe) or game folder and produces a struc
 
 5. **Build indexes:**
    ```powershell
-   & "<skill-root>/scripts/build-indexes.ps1" "<output-dir>"
+   & "<skill-root>/scripts/build-indexes.ps1" -SourceDir "<output-dir>/src" -OutputDir "<output-dir>/metadata"
    ```
 
 6. **Write README.md** from template in `assets/README.template.md` with pipeline results.

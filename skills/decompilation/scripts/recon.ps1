@@ -256,7 +256,8 @@ if ($dieResult) {
 function Test-ConfuserExHeuristic {
     param(
         [string]$Target,
-        [string]$AllStringsPath
+        [string]$AllStringsPath,
+        [byte[]]$Bytes
     )
 
     $markers = 0
@@ -285,14 +286,14 @@ function Test-ConfuserExHeuristic {
     #   Clean .NET:  39 PUA/MB
     #   Threshold:   200 PUA/MB → obfuscated
     try {
-        $bytes = [System.IO.File]::ReadAllBytes($Target)
+        if (-not $Bytes) { $Bytes = [System.IO.File]::ReadAllBytes($Target) }
         $puaCount = 0
-        for ($i = 0; $i -lt $bytes.Length - 2; $i++) {
-            if ($bytes[$i] -eq 0xEE -and $bytes[$i+1] -ge 0x80 -and $bytes[$i+1] -le 0xBE) {
+        for ($i = 0; $i -lt $Bytes.Length - 2; $i++) {
+            if ($Bytes[$i] -eq 0xEE -and $Bytes[$i+1] -ge 0x80 -and $Bytes[$i+1] -le 0xBE) {
                 $puaCount++
             }
         }
-        $sizeMB = $bytes.Length / 1MB
+        $sizeMB = $Bytes.Length / 1MB
         $density = if ($sizeMB -gt 0) { [math]::Round($puaCount / $sizeMB, 0) } else { 0 }
 
         if ($density -gt 500) {
@@ -405,7 +406,8 @@ if ($kind -eq 'managed' -or $kind -eq 'unity_mono') {
 
     # Also check raw bytes for Costura resource pattern
     if ($hasDotNetMetadata -and $fileSize -gt 1024) {
-        $rawText = [System.Text.Encoding]::UTF8.GetString($bytes)
+        $scanLen = [Math]::Min($bytes.Length, 10MB)
+        $rawText = [System.Text.Encoding]::UTF8.GetString($bytes, 0, $scanLen)
         if ($rawText -match 'costura\..*\.dll\.compressed') {
             $embeddedSuspected = $true
             if ('Costura.Fody resources' -notin $embeddedSignals) {
@@ -459,7 +461,7 @@ $nextPhase = switch ($kind) {
 # ── ConfuserEx heuristic fallback (when DiE missed it) ─────────────────────
 
 if ($kind -eq 'managed' -and $obfuscator -eq 'none') {
-    $cfxResult = Test-ConfuserExHeuristic -Target $targetFile -AllStringsPath $allStringsFile
+    $cfxResult = Test-ConfuserExHeuristic -Target $targetFile -AllStringsPath $allStringsFile -Bytes $bytes
     if ($cfxResult.IsConfuserEx) {
         $obfuscator = "ConfuserEx (heuristic, $($cfxResult.Confidence) confidence)"
         $obfuscatorFeatures = @("unknown_features")

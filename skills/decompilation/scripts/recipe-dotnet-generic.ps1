@@ -24,6 +24,11 @@ $script:LogTag = 'dotnet-generic'
 
 . (Join-Path $PSScriptRoot '_common.ps1')
 
+if (-not (Test-Path $Target)) {
+    Log "ERROR: Target not found: $Target"
+    exit 1
+}
+
 # ── Create folder structure ──────────────────────────────────────────────────
 
 $dirs = @('original', 'src', 'strings', 'metadata')
@@ -119,7 +124,7 @@ $pipelineJson = [ordered]@{
     target  = $Target
     recipe  = 'dotnet-generic'
     steps   = @(
-        [ordered]@{ step = 1; name = 'Decompile'; status = if (Test-Path (Join-Path $srcDir '*.cs') -ErrorAction SilentlyContinue) { 'success' } else { 'partial' } }
+        [ordered]@{ step = 1; name = 'Decompile'; status = if ((Get-ChildItem -LiteralPath $srcDir -Filter '*.cs' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1)) { 'success' } else { 'partial' } }
         [ordered]@{ step = 2; name = 'Extract strings'; status = if (Test-Path $allStringsFile) { 'success' } else { 'failed' } }
         [ordered]@{ step = 3; name = 'Build indexes'; status = if (Test-Path (Join-Path $metadataDir 'index.json') -ErrorAction SilentlyContinue) { 'success' } else { 'skipped' } }
     )

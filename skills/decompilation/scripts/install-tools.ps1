@@ -281,7 +281,7 @@ function Install-FromGitHubRelease {
         if ($children.Count -eq 1 -and $children[0].PSIsContainer) {
             $subDir = $children[0].FullName
             Get-ChildItem -Path $subDir | Move-Item -Destination $destDir -Force
-            Remove-Item -Path $subDir -Force
+            Remove-Item -Path $subDir -Recurse -Force
         }
     } else {
         Copy-Item -Path $downloadPath -Destination $destDir -Force
@@ -457,7 +457,7 @@ $toolDirs = Get-ChildItem -Path $ToolsRoot -Directory -ErrorAction SilentlyConti
     ForEach-Object { $_.FullName }
 $toolDirs += $ToolsRoot
 foreach ($d in $toolDirs) {
-    if ($env:PATH -notlike "*$d*") {
+    if ($d -notin ($env:PATH -split ';')) {
         $env:PATH = "$d;$env:PATH"
     }
 }

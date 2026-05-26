@@ -51,7 +51,7 @@
 
 | Tool | URL | Install | Priority |
 |---|---|---|---|
-| **NoFuserEx** | https://github.com/XenocodeRCE/NoFuserEx | Download release | Recommended |
+| **NoFuserEx** | https://github.com/undebel/NoFuserEx | Download release | Recommended | (original XenocodeRCE repo deleted) |
 | **ConfuserEx-Unpacker-2** | https://github.com/cawk/ConfuserEx-Unpacker-2 | Build from source | Recommended |
 | **ConfuserEx-Dynamic-Unpacker** | https://github.com/ryancblack/ConfuserEx-Unpacker | Build from source | Optional |
 | **ConfuserEx2_String_Decryptor** (Dump-GUY) | https://github.com/Dump-GUY/ConfuserEx2_String_Decryptor | Build from source | Recommended |
