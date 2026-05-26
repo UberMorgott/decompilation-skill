@@ -1,0 +1,8 @@
+{
+  "name": "decompilation",
+  "description": "Universal binary decompilation and deobfuscation skill. Decompile .dll, .exe, Unity IL2CPP, Delphi, .NET ConfuserEx binaries into readable source code with structured metadata.",
+  "author": {
+    "name": "UberMorgott",
+    "url": "https://github.com/UberMorgott"
+  }
+}

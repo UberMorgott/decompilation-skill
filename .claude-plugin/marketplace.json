@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "decompilation-skill",
+  "description": "Universal binary decompilation and deobfuscation skill for Claude Code. Supports .NET ConfuserEx, Delphi, Unity IL2CPP, native binaries.",
+  "owner": {
+    "name": "UberMorgott",
+    "url": "https://github.com/UberMorgott"
+  },
+  "plugins": [
+    {
+      "name": "decompilation",
+      "description": "Decompile, deobfuscate, and reverse-engineer compiled binaries into readable source code with structured metadata.",
+      "source": "./",
+      "category": "developer-tools"
+    }
+  ]
+}
