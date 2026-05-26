@@ -26,6 +26,8 @@ $script:LogTag = 'native'
 
 . (Join-Path $PSScriptRoot '_common.ps1')
 
+$ghidraScripts = Join-Path $PSScriptRoot 'ghidra'
+
 # ── Create folder structure ──────────────────────────────────────────────────
 
 $dirs = @('original', 'strings', 'native/ghidra_project', 'native/functions', 'metadata')
@@ -54,6 +56,8 @@ try {
 } catch {
     Log "WARNING: Could not read binary for Go detection: $_"
 }
+
+try {
 
 # ── Step 1: Strings extraction ───────────────────────────────────────────────
 
@@ -123,6 +127,7 @@ Invoke-PipelineStep -Name 'Ghidra headless analysis' -Action {
     Log "Importing and analyzing in Ghidra..."
     & analyzeHeadless $ghidraProjectDir $projectName `
         -import $Target `
+        -scriptPath $ghidraScripts `
         2>&1 | ForEach-Object { Log "  $_" }
 
     if ($LASTEXITCODE -ne 0) {
@@ -145,6 +150,7 @@ Invoke-PipelineStep -Name 'Export per-function decompilation' -Action {
     Log "Exporting function decompilation..."
     & analyzeHeadless $ghidraProjectDir $projectName `
         -process $targetName `
+        -scriptPath $ghidraScripts `
         -postScript ExportDecompilation.java $functionsDir `
         2>&1 | ForEach-Object { Log "  $_" }
 
@@ -155,6 +161,8 @@ Invoke-PipelineStep -Name 'Export per-function decompilation' -Action {
     $exportedCount = (Get-ChildItem -Path $functionsDir -Filter '*.c' -ErrorAction SilentlyContinue).Count
     Log "Exported $exportedCount function files"
 }
+
+} finally {
 
 # ── Pipeline summary ────────────────────────────────────────────────────────
 
@@ -172,6 +180,8 @@ $pipelineJson | ConvertTo-Json -Depth 5 | Out-File -FilePath (Join-Path $OutputD
 
 $failedCount = ($script:StepResults | Where-Object { $_.status -eq 'failed' }).Count
 Log "Native pipeline complete. $($script:StepNumber) steps, $failedCount failed."
+
+} # end finally
 
 if ($failedCount -gt 0) {
     Write-Output "PIPELINE_STATUS:partial"

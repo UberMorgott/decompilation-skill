@@ -26,6 +26,10 @@ $script:LogTag = 'delphi'
 
 . (Join-Path $PSScriptRoot '_common.ps1')
 
+$ghidraScripts = Join-Path $PSScriptRoot 'ghidra'
+
+try {
+
 # ── Create folder structure ──────────────────────────────────────────────────
 
 $dirs = @('original', 'strings', 'native/ghidra_project', 'native/functions', 'native/forms', 'metadata')
@@ -117,6 +121,7 @@ Invoke-PipelineStep -Name 'Ghidra headless + dhrake' -Action {
     Log "Importing into Ghidra..."
     & analyzeHeadless $ghidraProjectDir $projectName `
         -import $Target `
+        -scriptPath $ghidraScripts `
         -postScript dhrake_apply.py $idcFile `
         2>&1 | ForEach-Object { Log "  $_" }
 
@@ -129,6 +134,7 @@ Invoke-PipelineStep -Name 'Ghidra headless + dhrake' -Action {
     $functionsDir = Join-Path $OutputDir 'native' 'functions'
     & analyzeHeadless $ghidraProjectDir $projectName `
         -process $targetName `
+        -scriptPath $ghidraScripts `
         -postScript ExportDecompilation.java $functionsDir `
         2>&1 | ForEach-Object { Log "  $_" }
 
@@ -162,6 +168,8 @@ Invoke-PipelineStep -Name 'Resource Hacker (forms/resources)' -Action {
     Log "Extracted $extractedCount resource files"
 }
 
+} finally {
+
 # ── Pipeline summary ────────────────────────────────────────────────────────
 
 $pipelineJson = [ordered]@{
@@ -177,6 +185,8 @@ $pipelineJson | ConvertTo-Json -Depth 5 | Out-File -FilePath (Join-Path $OutputD
 
 $failedCount = ($script:StepResults | Where-Object { $_.status -eq 'failed' }).Count
 Log "Delphi pipeline complete. $($script:StepNumber) steps, $failedCount failed."
+
+} # end finally
 
 if ($failedCount -gt 0) {
     Write-Output "PIPELINE_STATUS:partial"

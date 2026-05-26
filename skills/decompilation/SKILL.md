@@ -36,6 +36,41 @@ Run recon before any decompilation. Never assume binary type from filename.
 
 ---
 
+## Phase 0.5 — Tool Check & User Consent
+
+After recon determines the binary type, check which tools are needed for that pipeline and whether they are installed.
+
+```powershell
+& ./scripts/install-tools.ps1 -Check
+```
+
+**If tools are missing:**
+
+1. List the missing tools and what each does (one line per tool)
+2. Show the install command: `install-tools.ps1 -Tool <name>` or `-All`
+3. **ASK the user for permission before installing anything**
+4. If user approves → run install-tools.ps1
+5. **If user refuses → tell them decompilation is not possible without these tools and stop**
+
+Example interaction:
+```
+For this .NET ConfuserEx binary, the following tools are needed but not installed:
+- de4dot-cex — control flow deobfuscation + symbol rename
+- strings — raw string extraction
+
+Install them? (install-tools.ps1 will download to ~/.claude/tools/decompilation/)
+```
+
+If user says no:
+```
+Decompilation not possible without the required tools.
+Optional tools can be skipped — pipeline will work partially.
+```
+
+**Required vs Optional:** Required tools block the pipeline entirely. Optional tools (IDR, Resource Hacker, Frida) allow partial results — warn but proceed.
+
+---
+
 ## Routing Tree
 
 ### Decision Flowchart

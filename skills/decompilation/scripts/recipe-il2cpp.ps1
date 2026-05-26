@@ -27,6 +27,10 @@ $script:LogTag = 'il2cpp'
 
 . (Join-Path $PSScriptRoot '_common.ps1')
 
+$ghidraScripts = Join-Path $PSScriptRoot 'ghidra'
+
+try {
+
 # ── Create folder structure ──────────────────────────────────────────────────
 
 $dirs = @('original', 'dummy_dlls', 'cpp2il_out', 'src', 'strings', 'metadata', 'native/ghidra_project', 'native/functions')
@@ -88,11 +92,12 @@ Invoke-PipelineStep -Name 'Il2CppDumper (dummy DLLs)' -Action {
     }
 
     $dummyDir = Join-Path $OutputDir 'dummy_dlls'
-    & Il2CppDumper $gameAssemblyPath $globalMetadataPath $dummyDir 2>&1 | ForEach-Object { Log "  $_" }
+    # Il2CppDumper calls Console.ReadKey() on exit which throws in non-interactive mode.
+    # Pipe empty stdin to suppress, and ignore non-zero exit code if DLLs were produced.
+    '' | & Il2CppDumper $gameAssemblyPath $globalMetadataPath $dummyDir 2>&1 | ForEach-Object { Log "  $_" }
 
-    if ($LASTEXITCODE -ne 0) { throw "Il2CppDumper exited with code $LASTEXITCODE" }
-
-    $dllCount = (Get-ChildItem -Path $dummyDir -Filter '*.dll' -ErrorAction SilentlyContinue).Count
+    $dllCount = (Get-ChildItem -Path $dummyDir -Filter '*.dll' -Recurse -ErrorAction SilentlyContinue).Count
+    if ($dllCount -eq 0) { throw "Il2CppDumper produced 0 DLLs (exit code $LASTEXITCODE)" }
     Log "Il2CppDumper produced $dllCount dummy DLLs"
 }
 
@@ -130,7 +135,7 @@ Invoke-PipelineStep -Name 'Decompile DLLs (ilspycmd)' -Action {
     $srcDir = Join-Path $OutputDir 'src'
 
     # Decompile dummy DLLs
-    $dummyDlls = Get-ChildItem -Path (Join-Path $OutputDir 'dummy_dlls') -Filter '*.dll' -ErrorAction SilentlyContinue
+    $dummyDlls = Get-ChildItem -Path (Join-Path $OutputDir 'dummy_dlls') -Filter '*.dll' -Recurse -ErrorAction SilentlyContinue
     foreach ($dll in $dummyDlls) {
         $name = [System.IO.Path]::GetFileNameWithoutExtension($dll.Name)
         # Skip system/Unity engine DLLs for cleaner output
@@ -211,6 +216,7 @@ Invoke-PipelineStep -Name 'Ghidra with IL2CPP symbols (optional)' -Action {
         Log "Found Il2CppDumper script.json + ghidra_with_struct.py — importing with IL2CPP symbols"
         & analyzeHeadless $ghidraProjectDir $projectName `
             -import $gameAssemblyPath `
+            -scriptPath $ghidraScripts `
             -postScript $ghidraIl2cppScript $scriptJson `
             2>&1 | ForEach-Object { Log "  $_" }
     } else {
@@ -221,18 +227,22 @@ Invoke-PipelineStep -Name 'Ghidra with IL2CPP symbols (optional)' -Action {
         }
         & analyzeHeadless $ghidraProjectDir $projectName `
             -import $gameAssemblyPath `
+            -scriptPath $ghidraScripts `
             2>&1 | ForEach-Object { Log "  $_" }
     }
 
     $functionsDir = Join-Path $OutputDir 'native' 'functions'
     & analyzeHeadless $ghidraProjectDir $projectName `
         -process (Split-Path $gameAssemblyPath -Leaf) `
+        -scriptPath $ghidraScripts `
         -postScript ExportDecompilation.java $functionsDir `
         2>&1 | ForEach-Object { Log "  $_" }
 
     $exportedCount = (Get-ChildItem -Path $functionsDir -Filter '*.c' -ErrorAction SilentlyContinue).Count
     Log "Ghidra exported $exportedCount function files"
 }
+
+} finally {
 
 # ── Pipeline summary ────────────────────────────────────────────────────────
 
@@ -251,6 +261,8 @@ $pipelineJson | ConvertTo-Json -Depth 5 | Out-File -FilePath (Join-Path $OutputD
 
 $failedCount = ($script:StepResults | Where-Object { $_.status -eq 'failed' }).Count
 Log "IL2CPP pipeline complete. $($script:StepNumber) steps, $failedCount failed."
+
+} # end finally
 
 if ($failedCount -gt 0) {
     Write-Output "PIPELINE_STATUS:partial"

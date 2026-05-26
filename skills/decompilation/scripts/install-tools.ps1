@@ -107,11 +107,10 @@ $ToolRegistry = [ordered]@{
     # === ConfuserEx Tools ===
     NoFuserEx = @{
         Category    = 'ConfuserEx'
-        Repo        = 'XenocodeRCE/NoFuserEx'
+        Repo        = 'undebel/NoFuserEx'
         Binary      = 'NoFuserEx.exe'
-        Method      = 'github-release'
-        AssetFilter = '*.zip'
-        Description = 'ConfuserEx control-flow cleaner'
+        Method      = 'manual'
+        Description = 'ConfuserEx control-flow cleaner (original repo deleted; build from source: clone, open NoFuserEx.sln, build Release)'
     }
     'ConfuserEx-Unpacker-2' = @{
         Category    = 'ConfuserEx'
