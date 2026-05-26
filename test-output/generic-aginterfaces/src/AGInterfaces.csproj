@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>AGInterfaces</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>15.0</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="DotNetZip">
+      <HintPath>..\..\..\..\..\SOFT\AutoGRAPH 7\DotNetZip.dll</HintPath>
+    </Reference>
+    <Reference Include="TKCommon" />
+    <Reference Include="MsgPack">
+      <HintPath>..\..\..\..\..\SOFT\AutoGRAPH 7\MsgPack.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpSerializer">
+      <HintPath>..\..\..\..\..\SOFT\AutoGRAPH 7\SharpSerializer.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing.Common">
+      <HintPath>C:\Program Files (x86)\dotnet\shared\Microsoft.WindowsDesktop.App\6.0.26\System.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="BINParser" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\SOFT\AutoGRAPH 7\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="AddressBase" />
+    <Reference Include="Proxy">
+      <HintPath>..\..\..\..\..\SOFT\AutoGRAPH 7\Proxy.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\..\..\..\..\SOFT\AutoGRAPH 7\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="DataLoader" />
+    <Reference Include="TKHelpers" />
+  </ItemGroup>
+</Project>

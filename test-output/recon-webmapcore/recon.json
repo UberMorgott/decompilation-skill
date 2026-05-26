@@ -1,0 +1,16 @@
+{
+  "path": "D:\\MorgDEV\\WebMapCore.2026.1.2.1\\WebMapCore.dll",
+  "size_bytes": 7621632,
+  "sha256": "0271A51A3E9C97FCE7DA9B9F4B591ED578FB7C9CEE2FFBA84392F4607050D695",
+  "kind": "managed",
+  "runtime": ".NET",
+  "compiler": "Microsoft .NET",
+  "obfuscator": "ConfuserEx (heuristic, high confidence)",
+  "obfuscator_features": [
+    "unknown_features"
+  ],
+  "packed": false,
+  "embedded_assemblies_suspected": false,
+  "embedded_signals": [],
+  "next_phase": "dotnet_deobfuscate"
+}

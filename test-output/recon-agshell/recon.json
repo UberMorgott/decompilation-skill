@@ -1,0 +1,16 @@
+{
+  "path": "D:\\SOFT\\AutoGRAPH 7\\AutoGRAPHShell.dll",
+  "size_bytes": 3083448,
+  "sha256": "E5F5F861845E3F34C3F3D33A22D89D81A462D52FC6BC6F4EE1666963CB50D4E1",
+  "kind": "managed",
+  "runtime": ".NET",
+  "compiler": "Microsoft .NET",
+  "obfuscator": "ConfuserEx (heuristic, high confidence)",
+  "obfuscator_features": [
+    "unknown_features"
+  ],
+  "packed": false,
+  "embedded_assemblies_suspected": false,
+  "embedded_signals": [],
+  "next_phase": "dotnet_deobfuscate"
+}

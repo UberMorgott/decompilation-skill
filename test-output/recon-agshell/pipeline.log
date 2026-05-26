@@ -1,0 +1,9 @@
+10:32:00 [recon] Target file: D:\SOFT\AutoGRAPH 7\AutoGRAPHShell.dll
+10:32:00 [recon] SHA256: E5F5F861845E3F34C3F3D33A22D89D81A462D52FC6BC6F4EE1666963CB50D4E1
+10:32:00 [recon] Running diec on D:\SOFT\AutoGRAPH 7\AutoGRAPHShell.dll
+10:32:00 [recon] DiE detection complete
+10:32:00 [recon] Extracting strings...
+10:32:00 [recon] Strings extracted to D:\MorgDEV\Skill decompiller\test-output\recon-agshell\strings\all_strings.txt
+10:32:01 [recon] ConfuserEx detected by heuristic: Very high PUA density: 2563 occurrences, 872/MB (strong ConfuserEx indicator)
+10:32:01 [recon] Recon written to D:\MorgDEV\Skill decompiller\test-output\recon-agshell\recon.json
+10:32:01 [recon] Recon complete. Kind=managed, Obfuscator=ConfuserEx (heuristic, high confidence), Next=dotnet_deobfuscate

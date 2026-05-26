@@ -1,0 +1,8 @@
+10:32:04 [recon] Target file: D:\MorgDEV\GOwebserver\new\backend\autoschema\tools\ag-server\AutoGRAPHServer.exe
+10:32:05 [recon] SHA256: 2E1B0A1EFCEDDDFD3ADB6A8A009747D9E501DCEAF5981E9A22E74BB33FB57EE7
+10:32:07 [recon] Running diec on D:\MorgDEV\GOwebserver\new\backend\autoschema\tools\ag-server\AutoGRAPHServer.exe
+10:32:08 [recon] DiE detection complete
+10:32:08 [recon] Extracting strings...
+10:32:08 [recon] Strings extracted to D:\MorgDEV\Skill decompiller\test-output\recon-agserver\strings\all_strings.txt
+10:32:08 [recon] Recon written to D:\MorgDEV\Skill decompiller\test-output\recon-agserver\recon.json
+10:32:08 [recon] Recon complete. Kind=native, Obfuscator=none, Next=native_decompile

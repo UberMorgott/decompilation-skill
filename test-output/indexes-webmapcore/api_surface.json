@@ -1,0 +1,2153 @@
+{
+  "controllers": [
+    {
+      "type": "WebMapCore.Controllers.AboutController",
+      "file": "WebMapCore.Controllers\\AboutController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "WhatsNews",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "string",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<WhatsNewsItem[]>",
+          "attributes": []
+        },
+        {
+          "method": "WhatsnewsOnline",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "string",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<WhatsNewsItem[]>",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.d",
+      "file": "WebMapCore.Controllers\\AccountController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Login",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "LoginModel",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        },
+        {
+          "method": "LostPassword",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "LostPasswordModel",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        },
+        {
+          "method": "PassChange",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ChangePasswordModel",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Registration",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "RegistrationModel",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.f",
+      "file": "WebMapCore.Controllers\\ApiMobileController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "InfoStage",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileInfoStageModel",
+              "from": "Body"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "InfoStops",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileInfoModel",
+              "from": "Body"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "InfoTrips",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileInfoModel",
+              "from": "Body"
+            }
+          ],
+          "returns": "MobileStageResult",
+          "attributes": []
+        },
+        {
+          "method": "InfoCP",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileInfoModel",
+              "from": "Body"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "InfoRefills",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileInfoModel",
+              "from": "Body"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "SubNodes",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileSubNodesModel",
+              "from": "Body"
+            },
+            {
+              "name": "mobileSubNodesHandler",
+              "type": "IMobileSubNodesHandler",
+              "from": "Services"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        },
+        {
+          "method": "ValidateDemo",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [],
+          "returns": "IActionResult",
+          "attributes": [
+            "AllowAnonymous"
+          ]
+        },
+        {
+          "method": "GetLastInfo",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileLastInfoModel",
+              "from": "Body"
+            },
+            {
+              "name": "lastInfoLoader",
+              "type": "ILastInfoLoader",
+              "from": "Services"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Find",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileFindModel",
+              "from": "Body"
+            },
+            {
+              "name": "carFinder",
+              "type": "ICarFinder",
+              "from": "Services"
+            },
+            {
+              "name": "settingsContainer",
+              "type": "IGlobalSettingsContainer",
+              "from": "Services"
+            },
+            {
+              "name": "stageModulesBuilder",
+              "type": "IStageModulesBuilder",
+              "from": "Services"
+            },
+            {
+              "name": "helper",
+              "type": "IMobileHelper",
+              "from": "Services"
+            }
+          ],
+          "returns": "MobileSubNodeItem[]",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.c",
+      "file": "WebMapCore.Controllers\\ApiMobileLoginController.cs",
+      "route_prefix": "Api/UpdateToken",
+      "endpoints": [
+        {
+          "method": "Login",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileLoginModel",
+              "from": "Body"
+            },
+            {
+              "name": "reportExporterFactory",
+              "type": "IReportExporterFactory",
+              "from": "Services"
+            }
+          ],
+          "returns": "MobileLoginResult",
+          "attributes": []
+        },
+        {
+          "method": "UpdateToken",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileUpdateTokenModel",
+              "from": "Body"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": [
+            "Authorize(AuthenticationSchemes = \"MobileToken,Cookies\")"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.s",
+      "file": "WebMapCore.Controllers\\ApiMobileV2Controller.cs",
+      "route_prefix": "Api/v2/GetUserData",
+      "endpoints": [
+        {
+          "method": "Find",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileV2FindModel",
+              "from": "Body"
+            },
+            {
+              "name": "carFinder",
+              "type": "ICarFinder",
+              "from": "Services"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "GetLastInfo",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileLastInfoModel",
+              "from": "Body"
+            },
+            {
+              "name": "lastInfoLoader",
+              "type": "ILastInfoLoader",
+              "from": "Services"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "GetStages",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "MobileV2RequestByIDModel",
+              "from": "Body"
+            },
+            {
+              "name": "mobileSubNodesHandler",
+              "type": "IMobileSubNodesHandlerV2",
+              "from": "Services"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "GetStage",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileV2StageModel",
+              "from": "Body"
+            },
+            {
+              "name": "mobileGetStagesHandler",
+              "type": "IMobileV2GetStagesHandler",
+              "from": "Services"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "GetTripSplitters",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "MobileV2RequestByIDModel",
+              "from": "Body"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "InfoTrips",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileV2TripsModel",
+              "from": "Body"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "InfoTrip",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileV2TripModel",
+              "from": "Body"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Login",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "MobileLoginModel",
+              "from": "Body"
+            },
+            {
+              "name": "reportExporterFactory",
+              "type": "IReportExporterFactory",
+              "from": "Services"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": [
+            "AllowAnonymous"
+          ]
+        },
+        {
+          "method": "Login2FA",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "MobileLogin2FAModel",
+              "from": "Body"
+            },
+            {
+              "name": "reportExporterFactory",
+              "type": "IReportExporterFactory",
+              "from": "Services"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": [
+            "AllowAnonymous"
+          ]
+        },
+        {
+          "method": "UpdateToken",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileUpdateTokenModel",
+              "from": "Body"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "RefreshToken",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "refreshTokenModel",
+              "type": "RefreshTokenModel",
+              "from": "Body"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "LoadJournal",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "MobileV2LoadJournalModel",
+              "from": "Body"
+            },
+            {
+              "name": "addrBase",
+              "type": "SettingsFindAddressCollection",
+              "from": "Services"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Load",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "MobileV2LoadMRules",
+              "from": "Body"
+            },
+            {
+              "name": "systemSettings",
+              "type": "ISystemSettings",
+              "from": "Services"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "GetReports",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "MobileV2RequestByIDModel",
+              "from": "Body"
+            },
+            {
+              "name": "reportFactory",
+              "type": "IReportFactory",
+              "from": "Services"
+            }
+          ],
+          "returns": "object",
+          "attributes": []
+        },
+        {
+          "method": "GetReport",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "MobileV2GetReportModel",
+              "from": "Body"
+            },
+            {
+              "name": "reportFactory",
+              "type": "IReportFactory",
+              "from": "Services"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        },
+        {
+          "method": "SubNodes",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "ApiMobileV2SubNodesModel",
+              "from": "Body"
+            },
+            {
+              "name": "mobileSubNodesHandler",
+              "type": "IMobileSubNodesHandlerV2",
+              "from": "Services"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        },
+        {
+          "method": "GetUserData",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "MobileV2GetUserDataModel",
+              "from": "Body"
+            },
+            {
+              "name": "reportExporterFactory",
+              "type": "IReportExporterFactory",
+              "from": "Services"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.AppsController",
+      "file": "WebMapCore.Controllers\\AppsController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Edit",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "Data",
+              "type": "[AsJson] AppEditModel",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Delete",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.c",
+      "file": "WebMapCore.Controllers\\CarController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Find",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "virtualTreeId",
+              "type": "int?",
+              "from": "Query"
+            },
+            {
+              "name": "otherIDs",
+              "type": "[AsJson] int[]",
+              "from": "Query"
+            },
+            {
+              "name": "carFinder",
+              "type": "ICarFinder",
+              "from": "Services"
+            },
+            {
+              "name": "null",
+              "type": "[AsJson] string[] properties =",
+              "from": "Query"
+            }
+          ],
+          "returns": "JNodeEx[]",
+          "attributes": []
+        },
+        {
+          "method": "MessageSend",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "type",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "ids",
+              "type": "int[]",
+              "from": "Query"
+            },
+            {
+              "name": "msg",
+              "type": "string",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.a",
+      "file": "WebMapCore.Controllers\\CommandsController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Send",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "SendModelPost",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        },
+        {
+          "method": "Delete",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.CorsProxyController",
+      "file": "WebMapCore.Controllers\\CorsProxyController.cs",
+      "route_prefix": "*",
+      "endpoints": [
+        {
+          "method": "Post",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [],
+          "returns": "Task",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.a",
+      "file": "WebMapCore.Controllers\\DDDFilesController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "ByDrivers",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "sd",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "ed",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "drivers",
+              "type": "int[]",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<JByDriverResult>",
+          "attributes": []
+        },
+        {
+          "method": "ByDriversDetailed",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "sd",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "ed",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "drivers",
+              "type": "int[]",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<JByDriverResult>",
+          "attributes": []
+        },
+        {
+          "method": "ByCars",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "sd",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "ed",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "cars",
+              "type": "string[]",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<JByCarsResult>",
+          "attributes": []
+        },
+        {
+          "method": "ByCarsDetailed",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "sd",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "ed",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "cars",
+              "type": "string[]",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<JByCarsResult>",
+          "attributes": []
+        },
+        {
+          "method": "CarList",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<NameItemString[]>",
+          "attributes": []
+        },
+        {
+          "method": "CardUpdateTimes",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "drivers",
+              "type": "int[]",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<JCardInfoItem[]>",
+          "attributes": []
+        },
+        {
+          "method": "ByCarsHistory",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "sd",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "ed",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "cars",
+              "type": "string[]",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        },
+        {
+          "method": "CardDataPresence",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "sd",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "ed",
+              "type": "DateTime",
+              "from": "Query"
+            },
+            {
+              "name": "drivers",
+              "type": "int[]",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.a",
+      "file": "WebMapCore.Controllers\\DriverController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Find",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "idg",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "virtualTreeId",
+              "type": "int?",
+              "from": "Query"
+            },
+            {
+              "name": "null",
+              "type": "[AsJson] string[] properties =",
+              "from": "Query"
+            }
+          ],
+          "returns": "JNodeEx[]",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.FIDOController",
+      "file": "WebMapCore.Controllers\\FIDOController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Register",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "parms",
+              "type": "FIDORegisterParams",
+              "from": "Body"
+            },
+            {
+              "name": "login",
+              "type": "string",
+              "from": "Query"
+            }
+          ],
+          "returns": "unsafe IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Login",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "parms",
+              "type": "FIDOAuthenticateParams",
+              "from": "Body"
+            },
+            {
+              "name": "login",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "contextAccessor",
+              "type": "IHttpContextAccessor",
+              "from": "Services"
+            },
+            {
+              "name": "userFactory",
+              "type": "IUserInfoFactory",
+              "from": "Services"
+            }
+          ],
+          "returns": "unsafe async Task<IActionResult>",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.b",
+      "file": "WebMapCore.Controllers\\FilesController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Upload",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "readInputFilesService",
+              "type": "IReadInputFilesService",
+              "from": "Services"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.GeoController",
+      "file": "WebMapCore.Controllers\\GeoController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Find",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "idg",
+              "type": "int?",
+              "from": "Query"
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "virtualTreeId",
+              "type": "int?",
+              "from": "Query"
+            },
+            {
+              "name": "null",
+              "type": "[AsJson] string[] properties =",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<JNodeEx[]>",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.MapNoteController",
+      "file": "WebMapCore.Controllers\\MapNoteController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Save",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "Data",
+              "type": "[AsJson] MapNoteSaveModel",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Delete",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.MessagesController",
+      "file": "WebMapCore.Controllers\\MessagesController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Edit",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "item",
+              "type": "DBOrgMessage",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Delete",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.a",
+      "file": "WebMapCore.Controllers\\NoteController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Save",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "Data",
+              "type": "[AsJson] NoteSaveModel",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Delete",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.RoutingController",
+      "file": "WebMapCore.Controllers\\RoutingController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Route",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "points",
+              "type": "[AsJson] RoutePoint[]",
+              "from": "Query"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.SchemaConvertController",
+      "file": "WebMapCore.Controllers\\SchemaConvertController.cs",
+      "route_prefix": "Api/SchemaConvert",
+      "endpoints": [
+        {
+          "method": "SchemaConvert",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.b",
+      "file": "WebMapCore.Controllers\\SchemaUploadController.cs",
+      "route_prefix": "Api/SchemaUploadCompleted",
+      "endpoints": [
+        {
+          "method": "SchemaUploadMultipart",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.c",
+      "file": "WebMapCore.Controllers\\SettingController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "GetMobileColumns",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "type",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "stage",
+              "type": "string",
+              "from": "Query"
+            }
+          ],
+          "returns": "MobileColumnsResult",
+          "attributes": []
+        },
+        {
+          "method": "SetMobileColumns",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "nodeId",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "stageName",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "columns",
+              "type": "string[]",
+              "from": "Query"
+            },
+            {
+              "name": "asInherited",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "forCurrentGroup",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "replaceInner",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Save",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "type",
+              "type": "SettingType",
+              "from": "Query"
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "idcar",
+              "type": "int?",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Load",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "type",
+              "type": "SettingType",
+              "from": "Query"
+            },
+            {
+              "name": "def",
+              "type": "string",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "GetPropertyCards",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "EditPeriods",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "Data",
+              "type": "[AsJson] UserPeriodsSaveModel",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "SetColumnsWidth",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "nodeId",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "grid",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "Dictionary<string",
+              "type": "[AsJson]",
+              "from": "Query"
+            },
+            {
+              "name": "columns",
+              "type": "int>",
+              "from": "Query"
+            },
+            {
+              "name": "gridColumnsHelper",
+              "type": "IGridColumnsHelper",
+              "from": "Services"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "GetOrgColumnsWidth",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "\"\"",
+              "type": "string stageName =",
+              "from": "Query"
+            }
+          ],
+          "returns": "Dictionary<string, int>",
+          "attributes": []
+        },
+        {
+          "method": "SetFooterState",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "nodeId",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "stageName",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "state",
+              "type": "bool",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "SetTControlWorksColumns",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "columnSet",
+              "type": "string",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "GetTControlWorksColumns",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "GroupingEdit",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "Data",
+              "type": "[AsJson] GroupSaveModel",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "GetGroupingStatus",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "groupingHelper",
+              "type": "IGroupingHelper",
+              "from": "Services"
+            }
+          ],
+          "returns": "JGroupViewItem[]",
+          "attributes": []
+        },
+        {
+          "method": "SetTreeColumns",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "elementType",
+              "type": "ElementType",
+              "from": "Query"
+            },
+            {
+              "name": "statuses",
+              "type": "[AsJson] JStatusColumnInfo[]",
+              "from": "Query"
+            },
+            {
+              "name": "props",
+              "type": "[AsJson] JPropColumnInfo[]",
+              "from": "Query"
+            },
+            {
+              "name": "treeColumnsHelper",
+              "type": "ITreeColumnsHelper",
+              "from": "Services"
+            },
+            {
+              "name": "partitionType",
+              "type": "PartitionType",
+              "from": "Query"
+            }
+          ],
+          "returns": "JTreeColumns",
+          "attributes": []
+        },
+        {
+          "method": "GetTreeColumns",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "elementType",
+              "type": "ElementType",
+              "from": "Query"
+            },
+            {
+              "name": "treeColumnsHelper",
+              "type": "ITreeColumnsHelper",
+              "from": "Services"
+            },
+            {
+              "name": "(PartitionType",
+              "type": "PartitionType partitionType =",
+              "from": "Query"
+            }
+          ],
+          "returns": "GetTreeColumnsResult",
+          "attributes": []
+        },
+        {
+          "method": "SetTreeColumnsWidth",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "tree",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "columns",
+              "type": "[AsJson] SetTreeColumnsWidthModel",
+              "from": "Query"
+            },
+            {
+              "name": "(PartitionType",
+              "type": "PartitionType partitionType =",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.a",
+      "file": "WebMapCore.Controllers\\SourceController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Load",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "SourceViewItem[]",
+          "attributes": []
+        },
+        {
+          "method": "Edit",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "Data",
+              "type": "[AsJson] SourceSaveModel",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "ChangeState",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int[]",
+              "from": "Query"
+            },
+            {
+              "name": "state",
+              "type": "bool",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": [
+            "Authorize"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.b",
+      "file": "WebMapCore.Controllers\\TokensController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Delete",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int[]",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Generate",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "m",
+              "type": "MakeTokenModel",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": [
+            "Authorize"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.g",
+      "file": "WebMapCore.Controllers\\TrackController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Positions",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "long",
+              "from": "Query"
+            },
+            {
+              "name": "type",
+              "type": "JSTreeNodeType",
+              "from": "Query"
+            },
+            {
+              "name": "idgeo",
+              "type": "int?",
+              "from": "Query"
+            },
+            {
+              "name": "gtype",
+              "type": "int?",
+              "from": "Query"
+            },
+            {
+              "name": "idcars",
+              "type": "int[]",
+              "from": "Query"
+            },
+            {
+              "name": "virtualTreeId",
+              "type": "int?",
+              "from": "Query"
+            },
+            {
+              "name": "lastPositionsLoader",
+              "type": "ILastPositionsLoader",
+              "from": "Services"
+            }
+          ],
+          "returns": "Task<IActionResult>",
+          "attributes": []
+        }
+      ]
+    },
+    {
+      "type": "WebMapCore.Controllers.e",
+      "file": "WebMapCore.Controllers\\VirtualTreeController.cs",
+      "route_prefix": "",
+      "endpoints": [
+        {
+          "method": "Load",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "TreeItem[]",
+          "attributes": []
+        },
+        {
+          "method": "LoadGF",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "TreeItem[]",
+          "attributes": []
+        },
+        {
+          "method": "Edit",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "idorg",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "icon",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "target",
+              "type": "[AsJson] VirtualTreeSaveItemModel[]",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "EditGF",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "idorg",
+              "type": "int",
+              "from": "Query"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "icon",
+              "type": "string",
+              "from": "Query"
+            },
+            {
+              "name": "target",
+              "type": "[AsJson] VirtualTreeSaveItemModel[]",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "Delete",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        },
+        {
+          "method": "DeleteGF",
+          "http_methods": [
+            "POST"
+          ],
+          "route": "",
+          "parameters": [
+            {
+              "name": "id",
+              "type": "int",
+              "from": "Query"
+            }
+          ],
+          "returns": "IActionResult",
+          "attributes": []
+        }
+      ]
+    }
+  ]
+}

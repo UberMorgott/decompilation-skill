@@ -1,0 +1,9 @@
+10:32:02 [recon] Target file: D:\MorgDEV\WebMapCore.2026.1.2.1\WebMapCore.dll
+10:32:02 [recon] SHA256: 0271A51A3E9C97FCE7DA9B9F4B591ED578FB7C9CEE2FFBA84392F4607050D695
+10:32:02 [recon] Running diec on D:\MorgDEV\WebMapCore.2026.1.2.1\WebMapCore.dll
+10:32:03 [recon] DiE detection complete
+10:32:03 [recon] Extracting strings...
+10:32:03 [recon] Strings extracted to D:\MorgDEV\Skill decompiller\test-output\recon-webmapcore\strings\all_strings.txt
+10:32:04 [recon] ConfuserEx detected by heuristic: Very high PUA density: 5992 occurrences, 824/MB (strong ConfuserEx indicator)
+10:32:04 [recon] Recon written to D:\MorgDEV\Skill decompiller\test-output\recon-webmapcore\recon.json
+10:32:04 [recon] Recon complete. Kind=managed, Obfuscator=ConfuserEx (heuristic, high confidence), Next=dotnet_deobfuscate

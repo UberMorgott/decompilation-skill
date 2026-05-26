@@ -1,0 +1,8 @@
+10:32:09 [recon] Target file: D:\SOFT\AutoGRAPH 7\AGInterfaces.dll
+10:32:09 [recon] SHA256: 7798CAB5AF4CD7CA4F835AC9F44C4ED573809D40A327AC72A54AF1BB0CBDD3D7
+10:32:09 [recon] Running diec on D:\SOFT\AutoGRAPH 7\AGInterfaces.dll
+10:32:09 [recon] DiE detection complete
+10:32:09 [recon] Extracting strings...
+10:32:09 [recon] Strings extracted to D:\MorgDEV\Skill decompiller\test-output\recon-aginterfaces\strings\all_strings.txt
+10:32:10 [recon] Recon written to D:\MorgDEV\Skill decompiller\test-output\recon-aginterfaces\recon.json
+10:32:10 [recon] Recon complete. Kind=managed, Obfuscator=none, Next=direct_decompile
